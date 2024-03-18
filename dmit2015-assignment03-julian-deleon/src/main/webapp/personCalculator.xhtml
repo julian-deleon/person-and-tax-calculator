@@ -1,0 +1,153 @@
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:faces="jakarta.faces"
+        xmlns:ui="jakarta.faces.facelets"
+        xmlns:f="jakarta.faces.core"
+        xmlns:h="jakarta.faces.html"
+        xmlns:pt="jakarta.faces.passthrough"
+        xmlns:cc="jakarta.faces.composite"
+        xmlns:c="jakarta.tags.core"
+        xmlns:fn="jakarta.tags.functions"
+        xmlns:o="http://omnifaces.org/ui"
+        xmlns:of="http://omnifaces.org/functions"
+        xmlns:p="http://primefaces.org/ui"
+        template="/WEB-INF/faces-templates/layout.xhtml"
+>
+
+    <ui:param name="title" value="Person Calculator"/>
+
+    <ui:define name="maincontent">
+        <!-- If FacesContext message sent from init() method annotated with @PostConstruct in the Faces backing bean class are not shown on page:
+            1) Remove the @PostConstruct annotation from the Faces backing bean class
+            2) Add metadata tag shown below to execute the init() method
+        <f:metadata>
+            <f:viewParam name="dummy" />
+            <f:event type="postInvokeAction" listener="#{currentBeanView.init}" />
+        </f:metadata>
+        -->
+
+        <h1>Person Calculator</h1>
+
+        <!--Display all messages in FacesContext -->
+        <p:messages id="messages">
+            <p:autoUpdate/>
+        </p:messages>
+        <p:growl id="growl"/>
+
+        <!--Example on conditional rendering, you will need to change the rendered attribute value to an EL value expression -->
+        <p:outputPanel id="outputPanel">
+            <h:outputText
+                    rendered="false"
+                    value="Hello Faces World!"/>
+        </p:outputPanel>
+
+        <h:form prependId="false">
+            <p:focus context="formPanel"/>
+
+            <p:panel id="formPanel" header="Input Person Info" style="max-width: 500px">
+                <div class="ui-fluid">
+
+                    <div class="field">
+                        <p:outputLabel for="@next" >First Name:</p:outputLabel>
+                        <p:inputText id="firstName" value="#{currentPersonViewScopedView.currentPerson.firstName}"/>
+                    </div>
+
+                    <div class="field">
+                        <p:outputLabel for="@next" >Last Name:</p:outputLabel>
+                        <p:inputText id="lastName" value="#{currentPersonViewScopedView.currentPerson.lastName}"/>
+                    </div>
+
+                    <div class="field col-12">
+                        <p:outputLabel for="birthDate" >Birth Date:</p:outputLabel>
+                        <p:datePicker id="birthDate"
+                                      value="#{currentPersonViewScopedView.currentPerson.birthDate}"
+                                      pattern="yyyy-MM-dd"
+                                      showIcon="true"
+                                      monthNavigator="true"
+                                      yearNavigator="true"
+                                      yearRange="1900:2050"
+                        >
+                            <f:convertDateTime type="localDate" pattern="yyyy-MM-dd" />
+                        </p:datePicker>
+                    </div>
+
+                    <div class="field col-12">
+                        <p:outputLabel for="ageOnDate" >Age On Date:</p:outputLabel>
+                        <p:datePicker id="ageOnDate"
+                                      value="#{currentPersonViewScopedView.ageOnDate}"
+                                      pattern="yyyy-MM-dd"
+                                      showIcon="true"
+                                      monthNavigator="true"
+                                      yearNavigator="true"
+                                      yearRange="1900:2050"
+                        >
+                            <f:convertDateTime type="localDate" pattern="yyyy-MM-dd" />
+                        </p:datePicker>
+                    </div>
+
+                    <div class="formgroup-inline">
+                        <div class="field">
+                            <p:commandButton value="Get Current Age"
+                                             update=":messages :resultsField"
+                                             actionListener="#{currentPersonViewScopedView.onGetCurrentAge()}"
+                            >
+                            </p:commandButton>
+                        </div>
+
+                        <div class="field">
+                            <p:commandButton value="Get Age On Date"
+                                             update=":messages :resultsField"
+                                             actionListener="#{currentPersonViewScopedView.onGetAgeOnDate()}"
+                            >
+                            </p:commandButton>
+                        </div>
+
+                        <div class="field">
+                            <p:commandButton value="Chinese Zodiac"
+                                             update=":messages :resultsField"
+                                             actionListener="#{currentPersonViewScopedView.onGetChineseZodiac()}"
+                            >
+                            </p:commandButton>
+                        </div>
+
+                        <div class="field">
+                            <p:commandButton value="Astrological Sign"
+                                             update=":messages :resultsField"
+                                             actionListener="#{currentPersonViewScopedView.onGetAstrologicalSign()}"
+                            >
+                            </p:commandButton>
+                        </div>
+
+                        <div class="field">
+                            <p:commandButton value="Clear"
+                                             update="@form :outputPanel"
+                                             styleClass="ui-button-secondary"
+                                             actionListener="#{currentPersonViewScopedView.onClear()}"
+                            >
+                            </p:commandButton>
+                        </div>
+                    </div>
+
+                    <hr/>
+
+                    <p:outputPanel id="resultsField">
+                        <h:outputText value="Hi #{currentPersonViewScopedView.currentPerson.firstName} #{currentPersonViewScopedView.currentPerson.lastName}!"
+                                      style="font-weight: bold;" />
+                        <br/> <br/>
+                        <h:outputText value="Current Age: #{currentPersonViewScopedView.currentAgeDisplay}" />
+                        <br/>
+                        <h:outputText value="Age On: #{currentPersonViewScopedView.ageOnDateDisplay}" />
+                        <br/>
+                        <h:outputText value="Chinese Zodiac: #{currentPersonViewScopedView.chineseZodiacDisplay}" />
+                        <br/>
+                        <h:outputText value="Astrological Sign: #{currentPersonViewScopedView.astrologicalSignDisplay}" />
+                    </p:outputPanel>
+                </div>
+
+            </p:panel>
+
+        </h:form>
+
+    </ui:define>
+
+</ui:composition>
